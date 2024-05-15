@@ -41,7 +41,6 @@ export const useWordStore = defineStore("wordStore", {
       }, 5000);
     },
     processInput(e) {
-      if (session().timeout) return;
       if (/^.$/.test(e.key)) e.preventDefault();
       if (/^[a-z]/.test(e.key)) {
         const letter = e.key;

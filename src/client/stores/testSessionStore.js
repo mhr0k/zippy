@@ -6,7 +6,7 @@ import { postResult } from "@client/fetch.js";
 export const useTestSessionStore = defineStore("testSessionStore", {
   state: () => ({
     active: false,
-    key: 0,
+    key: 1,
     score: {
       wpm: 0,
       cpm: 0,
@@ -32,7 +32,7 @@ export const useTestSessionStore = defineStore("testSessionStore", {
       }
     },
     async finish() {
-      this.startTimeout();
+      await this.startTimeout();
       this.end();
       await this.postScore();
       await globalResults().fetch();
@@ -42,7 +42,7 @@ export const useTestSessionStore = defineStore("testSessionStore", {
         console.log("Score validation failed");
         return;
       }
-      await postResult({
+      postResult({
         wpm: this.score.wpm,
         cpm: this.score.cpm,
         acc: this.score.acc,
@@ -60,12 +60,13 @@ export const useTestSessionStore = defineStore("testSessionStore", {
     cancel() {
       this.resetScore();
       this.end();
+      words().reset();
     },
-    startTimeout() {
+    async startTimeout() {
       this.timeout = true;
       this.timeoutId = setTimeout(() => {
-        this.timeout = false;
         words().reset();
+        this.timeout = false;
       }, 3000);
     },
     resetScore() {

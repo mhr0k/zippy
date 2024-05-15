@@ -13,8 +13,10 @@ export const useGlobalResultsStore = defineStore("globalResultsStore", {
     async fetch() {
       this.loading = true;
       const response = await getResults();
-      this.data = response;
-      this.count = this.data?.length;
+      if (response) {
+        this.data = response;
+        this.count = this.data?.length;
+      }
       this.loading = false;
     },
     populate(type, step = 10) {

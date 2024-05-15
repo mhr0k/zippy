@@ -23,7 +23,7 @@
             timeout: session.timeout,
           }"
           ref="input"
-          contenteditable="true"
+          :contenteditable="!session.timeout"
           spellcheck="false"
           autocapitalize="off"
           autocorrect="off"
@@ -32,7 +32,7 @@
         >
       </div>
       <div class="test-rightPane">
-        <span v-for="word in wordStore.queue" :key="word">
+        <span v-for="word in wordStore.queue" :key="word + Math.random()">
           {{ word }}
         </span>
       </div>

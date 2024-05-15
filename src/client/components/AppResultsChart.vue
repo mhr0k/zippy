@@ -1,19 +1,19 @@
 <template>
   <Chart
-    v-if="globalResults.data"
     :data="chartData"
     :options="chartOptions"
-    :key="props.view + globalResults.count"
+    :key="props.view + session.key"
   />
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { watchEffect } from "vue";
 
 // Test result state data
 import { useGlobalResultsStore } from "@client/stores/globalResultsStore";
+import { useTestSessionStore } from "@client/stores/testSessionStore";
 const globalResults = useGlobalResultsStore();
-onMounted(() => globalResults.fetch());
+const session = useTestSessionStore();
 
 // Chart view selection
 const props = defineProps({ view: { type: String, default: "wpm" } });
@@ -75,33 +75,22 @@ const chartOptions = {
   },
 };
 
-// Chart data updater
-watch(
-  () => [globalResults.data, props.view],
-  () => {
-    if (globalResults.data) {
-      const entries = globalResults[props.view].tiers;
-      const purgedEmpty = entries.filter((e) => e.count > 0);
-      setupData(purgedEmpty);
-      setupColors(purgedEmpty);
-    }
-  }
-);
-
-// Chart data updater helper functions
-function setupData(entries) {
+const setupData = () => {
+  let entries = globalResults[props.view].tiers;
+  entries = entries.filter((e) => e.count > 0);
+  // dataset
   chartData.labels = entries.map((e) => e.range);
   chartData.datasets[0].data = entries.map((e) => e.count);
-}
-function setupColors(entries) {
+  // colors
   const colorSet = entries.map((e) => (e.current ? accent : primary));
   chartData.datasets[0].backgroundColor = colorSet.map((e) => transparent(e));
   chartData.datasets[0].hoverBackgroundColor = colorSet;
-}
-</script>
+};
 
-<style scoped lang="postcss">
-.bar-chart {
-  background-color: #4caf50;
-}
-</style>
+// Chart data updater
+watchEffect(() => {
+  if (globalResults.data && props.view && session.key) {
+    setupData();
+  }
+});
+</script>

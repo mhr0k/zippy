@@ -33,7 +33,7 @@ defineProps({
     left: 50%;
     transform: translate(-50%, -50%);
     &::part(text) {
-      opacity: 0;
+      display: none;
     }
     &::part(base) {
       width: calc(4.2 * var(--size));
