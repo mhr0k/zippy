@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@client/*": ["./src/client/*"],
+      "@api/*": ["./src/api/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

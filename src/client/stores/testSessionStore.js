@@ -1,0 +1,91 @@
+import { defineStore } from "pinia";
+import { useWordStore as words } from "@client/stores/wordStore";
+import { useGlobalResultsStore as globalResults } from "@client/stores/globalResultsStore";
+import { postResult } from "@client/fetch.js";
+
+export const useTestSessionStore = defineStore("testSessionStore", {
+  state: () => ({
+    active: false,
+    key: 0,
+    score: {
+      wpm: 0,
+      cpm: 0,
+      acc: 0,
+    },
+    timeout: false,
+    timeoutId: null,
+    timeLimit: 60,
+    timeLeft: 60,
+    intervalId: null,
+  }),
+  actions: {
+    start() {
+      if (this.ready) {
+        this.resetScore();
+        this.active = true;
+        this.intervalId = setInterval(() => {
+          this.timeLeft--;
+          if (this.timeLeft <= 0) {
+            this.finish();
+          }
+        }, 1000);
+      }
+    },
+    async finish() {
+      this.startTimeout();
+      this.end();
+      await this.postScore();
+      await globalResults().fetch();
+    },
+    async postScore() {
+      if (!this.validateScore()) {
+        console.log("Score validation failed");
+        return;
+      }
+      await postResult({
+        wpm: this.score.wpm,
+        cpm: this.score.cpm,
+        acc: this.score.acc,
+      });
+    },
+    validateScore() {
+      return this.score.wpm > 3 && this.score.acc > 10;
+    },
+    end() {
+      this.active = false;
+      this.key++;
+      this.timeLeft = this.timeLimit;
+      clearInterval(this.intervalId);
+    },
+    cancel() {
+      this.resetScore();
+      this.end();
+    },
+    startTimeout() {
+      this.timeout = true;
+      this.timeoutId = setTimeout(() => {
+        this.timeout = false;
+        words().reset();
+      }, 3000);
+    },
+    resetScore() {
+      this.score = {
+        wpm: 0,
+        cpm: 0,
+        acc: 0,
+      };
+    },
+    updateScore({ wpm, cpm, acc }) {
+      if (this.active) {
+        this.score.wpm = wpm;
+        this.score.cpm = cpm;
+        this.score.acc = acc;
+      }
+    },
+  },
+  getters: {
+    ready() {
+      return !this.active && !this.timeout ? true : false;
+    },
+  },
+});
