@@ -66,6 +66,14 @@ const chartOptions = {
         display: false,
       },
     },
+    y: {
+      border: {
+        display: false,
+      },
+      ticks: {
+        display: false,
+      },
+    },
   },
   elements: {
     line: {

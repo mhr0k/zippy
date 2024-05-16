@@ -87,6 +87,9 @@ article {
   background-color: var(--bg-lighter);
   height: 8rem;
   width: 80%;
+  @media (width <= 768px) {
+    width: 90%;
+  }
   font-size: 2rem;
   border-radius: 0.5rem;
   border: none;

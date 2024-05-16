@@ -29,9 +29,11 @@ section {
   display: flex;
   place-items: center;
   flex-direction: column;
-  width: 100%;
-  max-width: 1100px;
-  height: 600px;
+  width: 80%;
+  max-width: 1200px;
+  @media (width <= 768px) {
+    width: 100%;
+  }
   margin: 2rem 0;
   .chart {
     margin: 0 2rem;
