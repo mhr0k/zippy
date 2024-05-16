@@ -10,7 +10,7 @@
 import { watchEffect } from "vue";
 
 // Test result state data
-import { resultsStore } from "@client/stores/resultsStore";
+import { resultsStore } from "@/stores/resultsStore";
 const globalResults = resultsStore();
 
 // Chart view selection

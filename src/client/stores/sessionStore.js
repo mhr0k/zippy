@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { useInputStore as inputStore } from "@client/stores/inputStore";
-import { resultsStore as resultsStore } from "@client/stores/resultsStore";
-import { postResult } from "@client/fetch.js";
+import { useInputStore as inputStore } from "@/stores/inputStore";
+import { resultsStore as resultsStore } from "@/stores/resultsStore";
+import { postResult } from "@/fetch.js";
 
 export const useSessionStore = defineStore("sessionStore", {
   state: () => ({

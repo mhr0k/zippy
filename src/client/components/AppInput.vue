@@ -42,13 +42,13 @@
 </template>
 
 <script setup>
-import AppInputPrompt from "@client/components/AppInputPrompt.vue";
+import AppInputPrompt from "@/components/AppInputPrompt.vue";
 import { ref, watch } from "vue";
-import { focusAtEnd } from "@client/utils";
+import { focusAtEnd } from "@/utils";
 
 // State
-import { useInputStore } from "@client/stores/inputStore";
-import { useSessionStore } from "@client/stores/sessionStore";
+import { useInputStore } from "@/stores/inputStore";
+import { useSessionStore } from "@/stores/sessionStore";
 const session = useSessionStore();
 const inputStore = useInputStore();
 const input = ref();

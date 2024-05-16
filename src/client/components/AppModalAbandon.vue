@@ -8,7 +8,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { useInputStore } from "@client/stores/inputStore";
+import { useInputStore } from "@/stores/inputStore";
 const inputStore = useInputStore();
 const dialog = ref();
 const close = () => {

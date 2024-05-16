@@ -22,15 +22,15 @@
 </template>
 
 <script setup>
-import AppCounter from "@client/components/AppCounter.vue";
-import AppTimer from "@client/components/AppTimer.vue";
-import AppInput from "@client/components/AppInput.vue";
-import AppResults from "@client/components/AppResults.vue";
+import AppCounter from "@/components/AppCounter.vue";
+import AppTimer from "@/components/AppTimer.vue";
+import AppInput from "@/components/AppInput.vue";
+import AppResults from "@/components/AppResults.vue";
 import AppModalAbandon from "./components/AppModalAbandon.vue";
 
-import { useSessionStore } from "@client/stores/sessionStore";
+import { useSessionStore } from "@/stores/sessionStore";
 const session = useSessionStore();
-import { useInputStore } from "@client/stores/inputStore";
+import { useInputStore } from "@/stores/inputStore";
 const inputStore = useInputStore();
 
 import { onMounted } from "vue";
@@ -61,7 +61,7 @@ main {
     align-items: center;
     gap: 3rem;
     margin-bottom: 5rem;
-    @clientmedia (width <= 768px) {
+    @media (width <= 768px) {
       flex-direction: column;
       gap: 2rem;
     }

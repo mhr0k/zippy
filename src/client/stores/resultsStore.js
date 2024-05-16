@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { getResults } from "@client/fetch.js";
-import { getRange } from "@client/utils.js";
-import { useSessionStore as session } from "@client/stores/sessionStore";
+import { getResults } from "@/fetch.js";
+import { getRange } from "@/utils.js";
+import { useSessionStore as session } from "@/stores/sessionStore";
 
 export const resultsStore = defineStore("resultsStore", {
   state: () => ({
@@ -41,9 +41,6 @@ export const resultsStore = defineStore("resultsStore", {
         // Create ranges array
         let index = min;
         let limit = Math.ceil(max / 10) * 10;
-        if (type === "wpm") {
-          console.log("index", index, "max", limit);
-        }
         while (index <= limit) {
           const range = getRange(index, step);
           result.push({
@@ -51,9 +48,6 @@ export const resultsStore = defineStore("resultsStore", {
             count: 0,
             current: !!isCurrent(range),
           });
-          if (type === "wpm") {
-            console.log("index", index, "max", limit);
-          }
           index += step;
         }
         // Count records in each range

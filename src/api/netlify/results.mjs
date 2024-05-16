@@ -1,5 +1,5 @@
-import connect from "@api/mongo/connect.js";
-import model from "@api/mongo/result.js";
+import connect from "../mongo/connect.mjs";
+import model from "../mongo/result.mjs";
 
 export const handler = async (req) => {
   await connect();

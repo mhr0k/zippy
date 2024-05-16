@@ -10,13 +10,13 @@
 
 <script setup>
 import { ref } from "vue";
-import AppResultsChart from "@client/components/AppResultsChart.vue";
-import AppResultsNav from "@client/components/AppResultsNav.vue";
-import AppResultsLoading from "@client/components/AppResultsLoading.vue";
+import AppResultsChart from "@/components/AppResultsChart.vue";
+import AppResultsNav from "@/components/AppResultsNav.vue";
+import AppResultsLoading from "@/components/AppResultsLoading.vue";
 
 // Test result data
 import { onMounted } from "vue";
-import { resultsStore } from "@client/stores/resultsStore";
+import { resultsStore } from "@/stores/resultsStore";
 const globalResults = resultsStore();
 onMounted(() => globalResults.fetch());
 
