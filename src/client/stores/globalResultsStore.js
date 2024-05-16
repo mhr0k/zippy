@@ -7,15 +7,14 @@ export const useGlobalResultsStore = defineStore("globalResultsStore", {
   state: () => ({
     data: null,
     loading: false,
-    count: 0,
   }),
   actions: {
+    // Fetch data from db
     async fetch() {
       this.loading = true;
       const response = await getResults();
       if (response) {
         this.data = response;
-        this.count = this.data?.length;
       }
       this.loading = false;
     },
@@ -72,8 +71,11 @@ export const useGlobalResultsStore = defineStore("globalResultsStore", {
     },
     acc() {
       if (this.data) {
-        return this.populate("acc");
+        return this.populate("acc", 5);
       }
+    },
+    count() {
+      return this.data?.length || 0;
     },
   },
 });

@@ -17,6 +17,7 @@
     </div>
     <AppInput :key="session.key" />
     <AppResults />
+    <AppModalAbandon />
   </main>
 </template>
 
@@ -25,6 +26,7 @@ import AppCounter from "@client/components/AppCounter.vue";
 import AppTimer from "@client/components/AppTimer.vue";
 import AppInput from "@client/components/AppInput.vue";
 import AppResults from "@client/components/AppResults.vue";
+import AppModalAbandon from "./components/AppModalAbandon.vue";
 
 import { useTestSessionStore } from "@client/stores/testSessionStore";
 const session = useTestSessionStore();

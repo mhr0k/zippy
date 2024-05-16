@@ -35,18 +35,15 @@ export const useTestSessionStore = defineStore("testSessionStore", {
       await this.startTimeout();
       this.end();
       await this.postScore();
-      await globalResults().fetch();
     },
+    // Post data to db and push new record locally
     async postScore() {
       if (!this.validateScore()) {
         console.log("Score validation failed");
-        return;
+      } else {
+        globalResults().data.push(this.score);
+        postResult(this.score);
       }
-      postResult({
-        wpm: this.score.wpm,
-        cpm: this.score.cpm,
-        acc: this.score.acc,
-      });
     },
     validateScore() {
       return this.score.wpm > 3 && this.score.acc > 10;
@@ -61,6 +58,7 @@ export const useTestSessionStore = defineStore("testSessionStore", {
       this.resetScore();
       this.end();
       words().reset();
+      clearTimeout(words().abandonedTimer);
     },
     async startTimeout() {
       this.timeout = true;

@@ -1,5 +1,5 @@
 <template>
-  <section v-if="!globalResults.data">
+  <section v-if="globalResults.loading">
     <AppResultsLoading :loading="globalResults.loading" />
   </section>
   <section v-else>

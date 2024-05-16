@@ -28,6 +28,7 @@
           autocapitalize="off"
           autocorrect="off"
           tabindex="0"
+          autofocus
           >{{ wordStore.currentInput }}</span
         >
       </div>
@@ -42,7 +43,7 @@
 
 <script setup>
 import AppInputPrompt from "@client/components/AppInputPrompt.vue";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { focusAtEnd } from "@client/utils";
 
 // State
@@ -58,6 +59,7 @@ const handleEscape = () => session.cancel();
 const handleTyping = (e) => wordStore.processInput(e);
 const handleDelete = (e) => wordStore.processDelete(e);
 const handleSpace = () => wordStore.nextWord();
+
 // Restore right pane string on deleting input
 watch(
   () => wordStore.currentInput,
@@ -68,8 +70,14 @@ watch(
   }
 );
 
-// Autofocus
-onMounted(() => focusAtEnd(input.value));
+watch(
+  () => session.timeout,
+  () => {
+    if (!session.timeout) {
+      focusAtEnd(input.value);
+    }
+  }
+);
 </script>
 
 <style scoped lang="postcss">

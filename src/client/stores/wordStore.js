@@ -38,6 +38,7 @@ export const useWordStore = defineStore("wordStore", {
       }, 500);
       this.abandonedTimer = setTimeout(() => {
         this.abandoned = true;
+        session().cancel();
       }, 5000);
     },
     processInput(e) {

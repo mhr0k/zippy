@@ -2,7 +2,7 @@
   <Chart
     :data="chartData"
     :options="chartOptions"
-    :key="props.view + session.key"
+    :key="props.view + globalResults.count"
   />
 </template>
 
@@ -11,9 +11,7 @@ import { watchEffect } from "vue";
 
 // Test result state data
 import { useGlobalResultsStore } from "@client/stores/globalResultsStore";
-import { useTestSessionStore } from "@client/stores/testSessionStore";
 const globalResults = useGlobalResultsStore();
-const session = useTestSessionStore();
 
 // Chart view selection
 const props = defineProps({ view: { type: String, default: "wpm" } });
@@ -89,7 +87,8 @@ const setupData = () => {
 
 // Chart data updater
 watchEffect(() => {
-  if (globalResults.data && props.view && session.key) {
+  if (globalResults.data && props.view) {
+    console.log("setupData");
     setupData();
   }
 });
