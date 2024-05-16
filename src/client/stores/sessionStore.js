@@ -33,11 +33,10 @@ export const useSessionStore = defineStore("sessionStore", {
       }
     },
     // Triggers when the timer runs out
-    // The test is completed
-    async finish() {
-      await this.startTimeout();
+    finish() {
+      this.startTimeout();
       this.end();
-      await this.postScore();
+      this.postScore();
     },
     // Timeout used to block input when test ends
     async startTimeout() {
@@ -48,7 +47,7 @@ export const useSessionStore = defineStore("sessionStore", {
       }, 3000);
     },
     // Post data to db and push new record to local results store
-    async postScore() {
+    postScore() {
       if (!this.validateScore()) {
         console.log("Score validation failed");
       } else {
@@ -71,7 +70,7 @@ export const useSessionStore = defineStore("sessionStore", {
       this.key++;
       this.timeLeft = this.timeLimit;
       clearInterval(this.intervalId); // clears counter
-      clearTimeout(inputStore().abandonedTimer);
+      clearTimeout(inputStore().abandonedTimerId);
     },
     resetScore() {
       this.score = {

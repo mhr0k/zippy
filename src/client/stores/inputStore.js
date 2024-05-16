@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { generate as generateQueue } from "random-words";
+import { generate as generateWords } from "random-words";
 import { useSessionStore as session } from "@/stores/sessionStore";
 
 export const useInputStore = defineStore("inputStore", {
@@ -8,125 +8,79 @@ export const useInputStore = defineStore("inputStore", {
     currentWord: "",
     typed: [],
     queue: [],
-    typing: false,
     abandoned: false,
-    typingTimer: null,
-    abandonedTimer: null,
+    abandonedTimerId: null,
   }),
   actions: {
+    // Generates word queue to be typed
     generateQueue() {
-      this.queue = generateQueue(250);
+      this.queue = generateWords(250);
     },
+    // Resets initial state and regenerates word queue
     reset() {
       this.typed = [];
       this.generateQueue();
       this.currentWord = this.queue[0];
       this.currentInput = "";
+      clearTimeout(this.abandonedTimerId);
     },
-    resetCurrentInput() {
-      this.currentInput = "";
-    },
-    shiftQueueLetter() {
-      this.queue[0] = this.queue[0].substring(1);
-    },
-    updateTypingState() {
-      this.typing = true;
-      clearTimeout(this.typingTimer);
-      clearTimeout(this.abandonedTimer);
-      this.typingTimer = setTimeout(() => {
-        this.typing = false;
-      }, 500);
-      this.abandonedTimer = setTimeout(() => {
+    // Sets or resets timer that checks if the user has abandoned the test
+    setAbandonedTimer() {
+      clearTimeout(this.abandonedTimerId);
+      this.abandonedTimerId = setTimeout(() => {
         this.abandoned = true;
         session().cancel();
       }, 5000);
     },
+    // Handles typing into the test input
     processInput(e) {
-      if (/^.$/.test(e.key)) e.preventDefault();
-      if (/^[a-z]/.test(e.key)) {
-        const letter = e.key;
-        session().start();
-        this.currentInput += letter;
-        this.updateTypingState();
-        if (this.currentInputIsCorrect && letter === this.nextLetter) {
-          this.shiftQueueLetter();
-        }
-      }
+      session().start();
+      this.currentInput = e.target.innerText.replace(/\n/g, "");
+      this.queue[0] = this.currentWord.replace(this.longestPrefix, "");
+      this.setAbandonedTimer();
     },
-    processDelete(e) {
-      if (e.ctrlKey) {
-        this.resetCurrentInput();
-      } else {
-        this.popInputLetter(e.key);
-      }
-    },
-    popInputLetter() {
-      this.currentInput = this.currentInput.slice(0, -1);
-    },
-    unshiftQueueLetter(letter) {
-      this.queue[0] = letter + this.queue[0];
-    },
+    // Changes the next word on spacebar press and updates session score
     nextWord() {
       if (this.currentInput) {
         this.typed.push({
           word: this.currentInput,
-          missed: this.wordIsMistyped,
+          missed: this.currentWord !== this.currentInput,
         });
         this.queue.shift();
         this.currentWord = this.queue[0];
       }
       this.currentInput = "";
-      session().updateScore(this.score);
+      session().updateScore(this.calculateScore());
     },
-    restoreQueueString() {
-      const queueString = this.currentWord.replace(
-        this.findLongestPrefix(),
-        ""
-      );
-      this.queue[0] = queueString;
-    },
-    findLongestPrefix() {
-      const arr1 = this.currentInput.split("");
-      const arr2 = this.currentWord.split("");
-      return arr1.filter((char, index) => char === arr2[index]).join("");
-    },
-    countLetters(arr) {
-      return arr.reduce((acc, word) => acc + word.length, 0);
+    // Calculate score to push to the session store
+    calculateScore() {
+      const correctWords = this.typed
+        .filter((word) => !word.missed)
+        .map((word) => word.word);
+      function countLetters(arr) {
+        return arr.reduce((acc, word) => acc + word.length, 0);
+      }
+      return {
+        wpm: correctWords.length,
+        cpm: countLetters(correctWords),
+        acc: Math.round((correctWords.length / this.typed.length) * 100) || 0,
+      };
     },
   },
   getters: {
-    currentInputIsCorrect() {
+    // Is the current input correct?
+    isCorrect() {
       if (!this.currentWord.includes(this.currentInput)) {
         return false;
       } else {
         return true;
       }
     },
-    currentInputIsEmpty() {
-      return !this.currentInput;
-    },
-    currentInputIsMistyped() {
-      return !this.currentInputIsCorrect;
-    },
-    wordIsCorrect() {
-      return this.currentWord === this.currentInput;
-    },
-    wordIsMistyped() {
-      return !this.wordIsCorrect;
-    },
-    nextLetter() {
-      return this.queue[0][0];
-    },
-    correctWords() {
-      return this.typed.filter((word) => !word.missed).map((word) => word.word);
-    },
-    score() {
-      return {
-        wpm: this.correctWords.length,
-        cpm: this.countLetters(this.correctWords),
-        acc:
-          Math.round((this.correctWords.length / this.typed.length) * 100) || 0,
-      };
+    // Finds the longest matching prefix shared by current input and next in queue
+    longestPrefix() {
+      const arr1 = this.currentInput.split("");
+      const arr2 = this.currentWord.split("");
+      return arr1.filter((char, index) => char === arr2[index]).join("");
     },
   },
 });

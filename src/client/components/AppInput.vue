@@ -12,15 +12,13 @@
           >{{ typed.word }}
         </span>
         <span
-          @keydown="handleTyping"
-          @keydown.delete.prevent="handleDelete"
+          @input="handleInput"
+          @keydown.enter.prevent
           @keydown.space.prevent="handleSpace"
-          @keyup.esc.prevent="handleEscape"
+          @keyup.esc="handleEscape"
           class="test-currentSpan"
           :class="{
-            miss: inputStore.currentInputIsMistyped,
-            idle: !inputStore.typing,
-            timeout: session.timeout,
+            miss: !inputStore.isCorrect,
           }"
           ref="input"
           :contenteditable="!session.timeout"
@@ -29,8 +27,7 @@
           autocorrect="off"
           tabindex="0"
           autofocus
-          >{{ inputStore.currentInput }}</span
-        >
+        ></span>
       </div>
       <div class="test-rightPane">
         <span v-for="word in inputStore.queue" :key="word + Math.random()">
@@ -43,8 +40,7 @@
 
 <script setup>
 import AppInputPrompt from "@/components/AppInputPrompt.vue";
-import { ref, watch } from "vue";
-import { focusAtEnd } from "@/utils";
+import { ref } from "vue";
 
 // State
 import { useInputStore } from "@/stores/inputStore";
@@ -54,31 +50,13 @@ const inputStore = useInputStore();
 const input = ref();
 
 // Events
-const handleClickOnInput = () => focusAtEnd(input.value);
+const handleClickOnInput = () => input.value.focus();
 const handleEscape = () => session.cancel();
-const handleTyping = (e) => inputStore.processInput(e);
-const handleDelete = (e) => inputStore.processDelete(e);
-const handleSpace = () => inputStore.nextWord();
-
-// Restore right pane string on deleting input
-watch(
-  () => inputStore.currentInput,
-  (newValue, oldValue) => {
-    if (newValue.length < oldValue.length) {
-      inputStore.restoreQueueString();
-    }
-  }
-);
-
-// Autofocus input on timeout end
-watch(
-  () => session.timeout,
-  () => {
-    if (!session.timeout) {
-      input.value.focus();
-    }
-  }
-);
+const handleInput = (e) => inputStore.processInput(e);
+const handleSpace = () => {
+  input.value.innerText = "";
+  inputStore.nextWord();
+};
 </script>
 
 <style scoped lang="postcss">
@@ -140,26 +118,10 @@ article {
   .test-currentSpan {
     outline: none;
     color: var(--secondary);
-    caret-color: transparent;
-    &:focus {
-      margin-right: -3px;
-      border-right: 3px solid var(--secondary);
-    }
-    &.idle {
-      animation: caret-blink 1s step-end infinite;
-    }
-    &.timeout {
-      border-color: transparent !important;
-    }
   }
   .miss {
     text-decoration: line-through;
     color: var(--text-faded);
-  }
-}
-@keyframes caret-blink {
-  50% {
-    border-color: transparent;
   }
 }
 </style>

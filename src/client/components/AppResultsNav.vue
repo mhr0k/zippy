@@ -37,8 +37,10 @@ defineProps(["view"]);
 <style scoped lang="postcss">
 .chart-views {
   display: flex;
+  place-content: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  padding: 0;
   li {
     font-weight: 300;
     list-style-type: none;
@@ -52,6 +54,10 @@ defineProps(["view"]);
     }
     &.active {
       background-color: var(--primary);
+    }
+    @media (width <= 468px) {
+      font-size: 0.9rem;
+      padding: 0.2rem;
     }
   }
 }

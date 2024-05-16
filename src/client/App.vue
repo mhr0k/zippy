@@ -27,7 +27,6 @@ import AppTimer from "@/components/AppTimer.vue";
 import AppInput from "@/components/AppInput.vue";
 import AppResults from "@/components/AppResults.vue";
 import AppModalAbandon from "./components/AppModalAbandon.vue";
-
 import { useSessionStore } from "@/stores/sessionStore";
 const session = useSessionStore();
 import { useInputStore } from "@/stores/inputStore";
@@ -60,9 +59,10 @@ main {
     flex-direction: row-reverse;
     align-items: center;
     gap: 3rem;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
     @media (width <= 768px) {
       flex-direction: column;
+      margin-bottom: 3rem;
       gap: 2rem;
     }
     .counters {
