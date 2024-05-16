@@ -2,14 +2,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
 
 html {
-  --bg: #f6f6f7;
-  --bg-darker: #dadada;
-  --bg-lighter: white;
-  --text: #1b1b20;
-  --text-light: #979797;
-  --primary: #a5d601;
-  --secondary: #779c00;
-  --accent: #d24317;
+  --bg: #242424;
+  --bg-darker: #202020;
+  --bg-lighter: #363636;
+  --text: #ececec;
+  --text-faded: #808080;
+  --primary: #543cda;
+  --secondary: #5c8fff;
+  --accent: #1dd18c;
   --heading: clamp(2.25rem, -0.5625rem + 9vw, 4.5rem);
   --mobile: 768px;
   --accent-font: "Merriweather", serif;

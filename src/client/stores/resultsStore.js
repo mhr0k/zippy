@@ -23,9 +23,9 @@ export const resultsStore = defineStore("resultsStore", {
     // Type is "wpm", "cpm" or "acc"
     // Step is the size of each range
     populate(type, step = 10) {
+      const score = Number(session().score[type]);
+      const scoreRange = getRange(score, step);
       const isCurrent = (range) => {
-        const score = session().score[type];
-        const scoreRange = getRange(score, step);
         if (score) {
           return range === scoreRange;
         }
@@ -40,13 +40,20 @@ export const resultsStore = defineStore("resultsStore", {
         let result = [];
         // Create ranges array
         let index = min;
-        while (index <= max) {
+        let limit = Math.ceil(max / 10) * 10;
+        if (type === "wpm") {
+          console.log("index", index, "max", limit);
+        }
+        while (index <= limit) {
           const range = getRange(index, step);
           result.push({
             range,
             count: 0,
-            current: isCurrent(range),
+            current: !!isCurrent(range),
           });
+          if (type === "wpm") {
+            console.log("index", index, "max", limit);
+          }
           index += step;
         }
         // Count records in each range

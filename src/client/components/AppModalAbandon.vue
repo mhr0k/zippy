@@ -47,6 +47,7 @@ dialog[open] {
     padding: 0.5rem 1rem;
     border: none;
     background-color: var(--primary);
+    color: var(--text);
     cursor: pointer;
     margin-top: 0.5rem;
   }

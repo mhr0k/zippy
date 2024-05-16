@@ -43,7 +43,7 @@ defineProps({
       stroke: var(--primary);
     }
     &::part(circle) {
-      stroke: var(--bg-darker);
+      stroke: transparent;
     }
   }
   div {

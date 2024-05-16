@@ -106,6 +106,7 @@ watch(
 article {
   position: relative;
   --test-spacing: 0.5rem;
+  background-color: var(--bg-lighter);
   height: 8rem;
   width: 80%;
   font-size: 2rem;
@@ -126,7 +127,7 @@ article {
     align-items: center;
     text-align: end;
     gap: var(--test-spacing);
-    color: var(--text-light);
+    color: var(--text-faded);
   }
   .test-rightPane {
     overflow: hidden;
@@ -138,11 +139,11 @@ article {
   }
   .test-currentSpan {
     outline: none;
-    color: var(--primary);
+    color: var(--secondary);
     caret-color: transparent;
     &:focus {
-      margin-right: -1px;
-      border-right: 1px solid var(--primary);
+      margin-right: -3px;
+      border-right: 3px solid var(--secondary);
     }
     &.idle {
       animation: caret-blink 1s step-end infinite;
@@ -153,7 +154,7 @@ article {
   }
   .miss {
     text-decoration: line-through;
-    color: var(--text-light);
+    color: var(--text-faded);
   }
 }
 @keyframes caret-blink {

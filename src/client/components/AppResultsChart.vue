@@ -36,22 +36,23 @@ ChartJS.register(
   LinearScale
 );
 
-// Chart colors
-const primary = "#a5d601";
-const accent = "#d24317";
+const primary = getComputedStyle(document.body).getPropertyValue("--primary");
+const accent = getComputedStyle(document.body).getPropertyValue("--accent");
+const text = getComputedStyle(document.body).getPropertyValue("--text");
+const bgLighter = getComputedStyle(document.body).getPropertyValue(
+  "--bg-lighter"
+);
 function transparent(color) {
   return color + "80";
 }
 
 // Chart component config
+ChartJS.defaults.color = text;
+ChartJS.defaults.borderColor = bgLighter;
 const chartData = {
-  labels: null,
   datasets: [
     {
       label: "Records",
-      backgroundColor: null,
-      hoverBackgroundColor: null,
-      data: null,
     },
   ],
 };
