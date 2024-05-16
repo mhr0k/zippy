@@ -6,7 +6,7 @@
     <article @click="handleClickOnInput">
       <div class="test-leftPane">
         <span
-          v-for="typed in wordStore.typed"
+          v-for="typed in inputStore.typed"
           :key="typed"
           :class="{ miss: typed.missed }"
           >{{ typed.word }}
@@ -18,8 +18,8 @@
           @keyup.esc.prevent="handleEscape"
           class="test-currentSpan"
           :class="{
-            miss: wordStore.currentInputIsMistyped,
-            idle: !wordStore.typing,
+            miss: inputStore.currentInputIsMistyped,
+            idle: !inputStore.typing,
             timeout: session.timeout,
           }"
           ref="input"
@@ -29,11 +29,11 @@
           autocorrect="off"
           tabindex="0"
           autofocus
-          >{{ wordStore.currentInput }}</span
+          >{{ inputStore.currentInput }}</span
         >
       </div>
       <div class="test-rightPane">
-        <span v-for="word in wordStore.queue" :key="word + Math.random()">
+        <span v-for="word in inputStore.queue" :key="word + Math.random()">
           {{ word }}
         </span>
       </div>
@@ -47,34 +47,35 @@ import { ref, watch } from "vue";
 import { focusAtEnd } from "@client/utils";
 
 // State
-import { useWordStore } from "@client/stores/wordStore";
-import { useTestSessionStore } from "@client/stores/testSessionStore";
-const session = useTestSessionStore();
-const wordStore = useWordStore();
+import { useInputStore } from "@client/stores/inputStore";
+import { useSessionStore } from "@client/stores/sessionStore";
+const session = useSessionStore();
+const inputStore = useInputStore();
 const input = ref();
 
 // Events
 const handleClickOnInput = () => focusAtEnd(input.value);
 const handleEscape = () => session.cancel();
-const handleTyping = (e) => wordStore.processInput(e);
-const handleDelete = (e) => wordStore.processDelete(e);
-const handleSpace = () => wordStore.nextWord();
+const handleTyping = (e) => inputStore.processInput(e);
+const handleDelete = (e) => inputStore.processDelete(e);
+const handleSpace = () => inputStore.nextWord();
 
 // Restore right pane string on deleting input
 watch(
-  () => wordStore.currentInput,
+  () => inputStore.currentInput,
   (newValue, oldValue) => {
     if (newValue.length < oldValue.length) {
-      wordStore.restoreQueueString();
+      inputStore.restoreQueueString();
     }
   }
 );
 
+// Autofocus input on timeout end
 watch(
   () => session.timeout,
   () => {
     if (!session.timeout) {
-      focusAtEnd(input.value);
+      input.value.focus();
     }
   }
 );

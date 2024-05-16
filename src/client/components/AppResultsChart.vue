@@ -10,8 +10,8 @@
 import { watchEffect } from "vue";
 
 // Test result state data
-import { useGlobalResultsStore } from "@client/stores/globalResultsStore";
-const globalResults = useGlobalResultsStore();
+import { resultsStore } from "@client/stores/resultsStore";
+const globalResults = resultsStore();
 
 // Chart view selection
 const props = defineProps({ view: { type: String, default: "wpm" } });
@@ -88,7 +88,6 @@ const setupData = () => {
 // Chart data updater
 watchEffect(() => {
   if (globalResults.data && props.view) {
-    console.log("setupData");
     setupData();
   }
 });

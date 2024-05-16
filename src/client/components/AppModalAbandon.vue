@@ -8,17 +8,19 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { useWordStore } from "@client/stores/wordStore";
-const words = useWordStore();
+import { useInputStore } from "@client/stores/inputStore";
+const inputStore = useInputStore();
 const dialog = ref();
 const close = () => {
   dialog.value.close();
-  words.abandoned = false;
+  inputStore.abandoned = false;
 };
+
+// Show modal when the test is abandoned
 watch(
-  () => words.abandoned,
+  () => inputStore.abandoned,
   () => {
-    if (words.abandoned) {
+    if (inputStore.abandoned) {
       dialog.value.showModal();
     }
   }

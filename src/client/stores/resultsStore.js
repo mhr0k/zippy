@@ -1,15 +1,16 @@
 import { defineStore } from "pinia";
 import { getResults } from "@client/fetch.js";
 import { getRange } from "@client/utils.js";
-import { useTestSessionStore as session } from "@client/stores/testSessionStore";
+import { useSessionStore as session } from "@client/stores/sessionStore";
 
-export const useGlobalResultsStore = defineStore("globalResultsStore", {
+export const resultsStore = defineStore("resultsStore", {
   state: () => ({
     data: null,
     loading: false,
   }),
   actions: {
-    // Fetch data from db
+    // Fetches data from db
+    // Sets loading state
     async fetch() {
       this.loading = true;
       const response = await getResults();
@@ -18,6 +19,9 @@ export const useGlobalResultsStore = defineStore("globalResultsStore", {
       }
       this.loading = false;
     },
+    // Helps getters parse data
+    // Type is "wpm", "cpm" or "acc"
+    // Step is the size of each range
     populate(type, step = 10) {
       const isCurrent = (range) => {
         const score = session().score[type];

@@ -16,8 +16,8 @@ import AppResultsLoading from "@client/components/AppResultsLoading.vue";
 
 // Test result data
 import { onMounted } from "vue";
-import { useGlobalResultsStore } from "@client/stores/globalResultsStore";
-const globalResults = useGlobalResultsStore();
+import { resultsStore } from "@client/stores/resultsStore";
+const globalResults = resultsStore();
 onMounted(() => globalResults.fetch());
 
 // Chart view selection

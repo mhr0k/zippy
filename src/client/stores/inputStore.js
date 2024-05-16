@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { generate as generateQueue } from "random-words";
-import { useTestSessionStore as session } from "@client/stores/testSessionStore";
+import { useSessionStore as session } from "@client/stores/sessionStore";
 
-export const useWordStore = defineStore("wordStore", {
+export const useInputStore = defineStore("inputStore", {
   state: () => ({
     currentInput: "",
     currentWord: "",

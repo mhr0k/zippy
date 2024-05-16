@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { useWordStore as words } from "@client/stores/wordStore";
-import { useGlobalResultsStore as globalResults } from "@client/stores/globalResultsStore";
+import { useInputStore as inputStore } from "@client/stores/inputStore";
+import { resultsStore as resultsStore } from "@client/stores/resultsStore";
 import { postResult } from "@client/fetch.js";
 
-export const useTestSessionStore = defineStore("testSessionStore", {
+export const useSessionStore = defineStore("sessionStore", {
   state: () => ({
     active: false,
     key: 1,
@@ -19,6 +19,7 @@ export const useTestSessionStore = defineStore("testSessionStore", {
     intervalId: null,
   }),
   actions: {
+    // Triggers when the test starts
     start() {
       if (this.ready) {
         this.resetScore();
@@ -31,41 +32,46 @@ export const useTestSessionStore = defineStore("testSessionStore", {
         }, 1000);
       }
     },
+    // Triggers when the timer runs out
+    // The test is completed
     async finish() {
       await this.startTimeout();
       this.end();
       await this.postScore();
     },
-    // Post data to db and push new record locally
+    // Timeout used to block input when test ends
+    async startTimeout() {
+      this.timeout = true;
+      this.timeoutId = setTimeout(() => {
+        inputStore().reset();
+        this.timeout = false;
+      }, 3000);
+    },
+    // Post data to db and push new record to local results store
     async postScore() {
       if (!this.validateScore()) {
         console.log("Score validation failed");
       } else {
-        globalResults().data.push(this.score);
+        resultsStore().data.push(this.score);
         postResult(this.score);
       }
     },
     validateScore() {
       return this.score.wpm > 3 && this.score.acc > 10;
     },
+    // Triggers on escape or when test abandoned
+    cancel() {
+      this.resetScore();
+      this.end();
+      inputStore().reset();
+    },
+    // Clear-up after every test session
     end() {
       this.active = false;
       this.key++;
       this.timeLeft = this.timeLimit;
-      clearInterval(this.intervalId);
-    },
-    cancel() {
-      this.resetScore();
-      this.end();
-      words().reset();
-      clearTimeout(words().abandonedTimer);
-    },
-    async startTimeout() {
-      this.timeout = true;
-      this.timeoutId = setTimeout(() => {
-        words().reset();
-        this.timeout = false;
-      }, 3000);
+      clearInterval(this.intervalId); // clears counter
+      clearTimeout(inputStore().abandonedTimer);
     },
     resetScore() {
       this.score = {
@@ -74,6 +80,8 @@ export const useTestSessionStore = defineStore("testSessionStore", {
         acc: 0,
       };
     },
+    // Exposed method of updating the store
+    // Updates when test is completed
     updateScore({ wpm, cpm, acc }) {
       if (this.active) {
         this.score.wpm = wpm;
@@ -83,6 +91,7 @@ export const useTestSessionStore = defineStore("testSessionStore", {
     },
   },
   getters: {
+    // Check if the test is ready to start
     ready() {
       return !this.active && !this.timeout ? true : false;
     },

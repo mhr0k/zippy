@@ -28,13 +28,13 @@ import AppInput from "@client/components/AppInput.vue";
 import AppResults from "@client/components/AppResults.vue";
 import AppModalAbandon from "./components/AppModalAbandon.vue";
 
-import { useTestSessionStore } from "@client/stores/testSessionStore";
-const session = useTestSessionStore();
-import { useWordStore } from "@client/stores/wordStore";
-const wordStore = useWordStore();
+import { useSessionStore } from "@client/stores/sessionStore";
+const session = useSessionStore();
+import { useInputStore } from "@client/stores/inputStore";
+const inputStore = useInputStore();
 
 import { onMounted } from "vue";
-onMounted(() => wordStore.reset());
+onMounted(() => inputStore.reset());
 </script>
 
 <style scoped lang="postcss">
