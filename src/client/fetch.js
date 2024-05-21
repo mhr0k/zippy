@@ -35,9 +35,9 @@ export async function getResults() {
       const json = await response.json();
       return json;
     } else {
-      return false;
+      return null;
     }
   } catch (e) {
-    console.log(e.error);
+    console.log(e);
   }
 }

@@ -1,10 +1,10 @@
 <template>
-  <section v-if="globalResults.loading">
-    <AppResultsLoading :loading="globalResults.loading" />
-  </section>
-  <section v-else>
+  <section v-if="globalResults.status === 'success'">
     <AppResultsNav :view @update:view="(v) => (view = v)" />
     <AppResultsChart :view class="chart" />
+  </section>
+  <section v-else>
+    <AppResultsLoading :status="globalResults.status" />
   </section>
 </template>
 

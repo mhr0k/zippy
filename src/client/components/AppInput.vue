@@ -95,6 +95,26 @@ article {
   border: none;
   outline: none;
   box-shadow: 0px 3px 2rem rgba(0, 0, 0, 0.2);
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10%;
+    height: 80%;
+    width: 5rem;
+    background: linear-gradient(to left, transparent, var(--bg-lighter));
+    pointer-events: none;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 5rem;
+    background: linear-gradient(to right, transparent, var(--bg-lighter));
+    pointer-events: none;
+  }
   font-family: var(--accent-font);
   font-weight: 300;
   overflow: hidden;

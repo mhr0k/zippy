@@ -6,18 +6,25 @@ import { useSessionStore as session } from "@/stores/sessionStore";
 export const resultsStore = defineStore("resultsStore", {
   state: () => ({
     data: null,
-    loading: false,
+    status: null,
+    timeoutId: null,
   }),
   actions: {
     // Fetches data from db
     // Sets loading state
     async fetch() {
-      this.loading = true;
-      const response = await getResults();
-      if (response) {
-        this.data = response;
+      this.status = "loading";
+      this.timeoutId = setTimeout(() => {
+        this.status = "timeout";
+      }, 5000);
+      const results = await getResults();
+      if (results) {
+        this.data = results;
+        this.status = "success";
+      } else {
+        this.status = "error";
       }
-      this.loading = false;
+      clearTimeout(this.timeoutId);
     },
     // Helps getters parse data
     // Type is "wpm", "cpm" or "acc"

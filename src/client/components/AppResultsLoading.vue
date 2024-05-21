@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading" class="jump">
+  <div v-if="status === 'loading'" class="jump">
     <span style="--i: 1">L</span>
     <span style="--i: 2">o</span>
     <span style="--i: 3">a</span>
@@ -19,13 +19,19 @@
     <span style="--i: 17">.</span>
     <span style="--i: 18">.</span>
   </div>
-  <div v-if="!loading">
-    <span>Oops! Something went wrong while loading the results.</span>
+  <div v-if="status === 'timeout'">
+    <span>Oops, this is taking longer than expected.</span>
+  </div>
+  <div v-if="status === 'error'">
+    <span
+      >Something went wrong while fetching the results.<br />
+      Please try visiting the page later.</span
+    >
   </div>
 </template>
 
 <script setup>
-defineProps(["loading"]);
+defineProps(["status"]);
 </script>
 
 <style scoped lang="postcss">

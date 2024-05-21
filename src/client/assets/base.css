@@ -4,7 +4,7 @@
 html {
   --bg: #242424;
   --bg-darker: #202020;
-  --bg-lighter: #363636;
+  --bg-lighter: rgb(54, 54, 54);
   --text: #ececec;
   --text-faded: #808080;
   --primary: #543cda;
