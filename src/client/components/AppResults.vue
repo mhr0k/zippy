@@ -33,10 +33,11 @@ section {
   max-width: 1200px;
   @media (width <= 768px) {
     width: 100%;
+    max-width: unset;
   }
   margin: 2rem 0;
   .chart {
-    margin: 0 2rem;
+    width: 100%;
   }
   .loading {
     &::part(text) {
